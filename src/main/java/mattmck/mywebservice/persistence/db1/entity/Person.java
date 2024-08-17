@@ -1,4 +1,4 @@
-package mattmck.mywebservice.persistence.entity;
+package mattmck.mywebservice.persistence.db1.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 public class Person {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="person_id")
 	private Long id;
 	
