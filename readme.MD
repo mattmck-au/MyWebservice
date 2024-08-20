@@ -6,6 +6,6 @@ Sample webservice project for testing
 - Spring Boot
 - Web services
 - JPA
+- JTA (Atomikos)
 - PostgresSQL
-- Distributed transaction management
 - Multiple data sources
