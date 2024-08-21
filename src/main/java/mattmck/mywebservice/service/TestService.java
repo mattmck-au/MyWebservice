@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import mattmck.mywebservice.persistence.db1.entity.Person;
 import mattmck.mywebservice.persistence.db1.repository.PersonRepository;
 import mattmck.mywebservice.persistence.db2.entity.Address;
 import mattmck.mywebservice.persistence.db2.repository.AddressRepository;
+import mattmck.mywebservice.service.domain.TestJmsMessage;
 
 @Service
 @Transactional
@@ -29,7 +32,18 @@ public class TestService {
 
 	@Autowired
 	private AddressRepository addressRepository;
+	
+//	@Autowired
+//	private JmsTemplate jmsTemplate;
 
+	@Autowired
+    @Qualifier("jmsTemplate1")
+    private JmsTemplate jmsTemplate1;
+	
+	@Autowired
+    @Qualifier("jmsTemplate2")
+    private JmsTemplate jmsTemplate2;
+	
 	
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class, RuntimeException.class })
 	public String test() {
@@ -43,13 +57,21 @@ public class TestService {
 //					person.getFirstName(),
 //					person.getSurname());
 //		}
-	
-		// INSERT PERSON
-		Person person2 = new Person();
-		person2.setFirstName(Objects.toString(UUID.randomUUID()));
-		person2.setSurname(Objects.toString(UUID.randomUUID()));
-		personRepository.save(person2);
-		logger.debug("person inserted");
+
+		// ADD JMS MESSAGE
+		//jmsTemplate.convertAndSend("testQueue", new TestJmsMessage("info@example.com", "Hello"));
+		jmsTemplate1.convertAndSend("testQueue1", "HELLO1");
+		jmsTemplate2.convertAndSend("testQueue2", "HELLO2");
+		
+		
+
+		
+//		// INSERT PERSON
+//		Person person2 = new Person();
+//		person2.setFirstName(Objects.toString(UUID.randomUUID()));
+//		person2.setSurname(Objects.toString(UUID.randomUUID()));
+//		personRepository.save(person2);
+//		logger.debug("person inserted");
 		
 
 //		// GET ADDRESS
@@ -60,11 +82,13 @@ public class TestService {
 //					address.getDescription());
 //		}
 		
-		// INSERT ADDRESS
-		Address address2 = new Address();
-		address2.setDescription(Objects.toString(UUID.randomUUID()));
-		addressRepository.save(address2);
-		logger.debug("address inserted");
+//		// INSERT ADDRESS
+//		Address address2 = new Address();
+//		address2.setDescription(Objects.toString(UUID.randomUUID()));
+//		addressRepository.save(address2);
+//		logger.debug("address inserted");
+		
+		
 		
 		
 //		try {
@@ -76,10 +100,10 @@ public class TestService {
 //			e.printStackTrace();
 //		}
 //		
-//		
-//		if (1==1) {
-//			throw new RuntimeException("this is a test");
-//		}
+		
+		if (1==1) {
+			throw new RuntimeException("this is a test");
+		}
 		
 		return  "Greetings from Spring Boot! " + LocalDateTime.now();
 	}
